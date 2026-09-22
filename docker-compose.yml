@@ -1,22 +1,24 @@
-version: "3"
-
 services:
-  saleor-storefront:
-    container_name: saleor-storefront
+  saleor-paper:
+    container_name: saleor-paper
     build:
+      context: .
       dockerfile: Dockerfile
       args:
         NEXT_PUBLIC_SALEOR_API_URL: ${NEXT_PUBLIC_SALEOR_API_URL}
         NEXT_PUBLIC_STOREFRONT_URL: ${NEXT_PUBLIC_STOREFRONT_URL}
         NEXT_PUBLIC_DEFAULT_CHANNEL: ${NEXT_PUBLIC_DEFAULT_CHANNEL}
-    restart: always
+    restart: unless-stopped
     ports:
-      - 3000:3000
+      - "127.0.0.1:3011:3000"
     networks:
-      - saleor_network
-
-  # Add more containers below (nginx, postgres, etc.)
+      - paper-internal
+      - arena-shared
 
 networks:
-  saleor_network:
-    external: false
+  paper-internal:
+    name: paper-internal
+    driver: bridge
+
+  arena-shared:
+    external: true
