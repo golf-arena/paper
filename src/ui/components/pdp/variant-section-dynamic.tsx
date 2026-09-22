@@ -5,6 +5,7 @@ import { getDiscountInfo } from "@/lib/pricing";
 import { resolveChannelCurrency } from "@/lib/channels/resolve-channel-currency";
 import { getStorefrontContent } from "@/lib/content/server";
 import { CheckoutAddLineDocument } from "@/gql/graphql";
+import { buildGolfArenaCheckoutLine } from "@/lib/golf-arena/checkout-line";
 import { emitCommerceEvent } from "@/lib/analytics/emit.server";
 import { executeAuthenticatedGraphQL } from "@/lib/graphql";
 import * as Checkout from "@/lib/checkout";
@@ -143,7 +144,7 @@ export async function VariantSectionDynamic({
 			const addResult = await executeAuthenticatedGraphQL(CheckoutAddLineDocument, {
 				variables: {
 					id: checkout.id,
-					productVariantId: decodeURIComponent(selectedVariantID),
+					line: buildGolfArenaCheckoutLine(product, decodeURIComponent(selectedVariantID)),
 				},
 				cache: "no-cache",
 			});
