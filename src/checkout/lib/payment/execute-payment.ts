@@ -1,6 +1,7 @@
 import { type CheckoutGatewayMessages, getUnsupportedGatewayMessage } from "@/checkout/lib/payment-gateways";
 import { completeCheckoutOrder } from "./complete-order";
 import { executeDummyPayment } from "./providers/dummy-pay";
+import { executeYooKassaPayment } from "./providers/yookassa-pay";
 import { type PaymentContext, type PaymentResult, type ResolvedPaymentProvider } from "./types";
 
 /**
@@ -17,6 +18,8 @@ export async function executePayment(
 	}
 
 	switch (provider.type) {
+		case "yookassa":
+			return executeYooKassaPayment(context, provider.gateway.id, messages);
 		case "dummy":
 			return executeDummyPayment(context, provider.gateway.id, messages);
 		case "stripe":

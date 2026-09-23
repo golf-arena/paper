@@ -24,6 +24,7 @@ import {
 	stashPaymentCompletionError,
 } from "@/checkout/lib/payment/checkout-payment-completion";
 import { navigateToOrderConfirmation } from "@/checkout/lib/payment/navigate-to-order";
+import { storeYooKassaTransaction } from "@/checkout/lib/payment/yookassa-transaction-storage";
 import { useCheckoutGatewayMessages } from "@/checkout/hooks/use-checkout-gateway-messages";
 import { useCheckoutPaymentMessages } from "@/checkout/hooks/use-checkout-payment-messages";
 import { useCheckoutAvailability } from "@/checkout/providers/checkout-availability";
@@ -185,6 +186,15 @@ export function useCheckoutPayment({
 						stashPaymentCompletionError(paymentMessage);
 					}
 					setErrors(nextErrors);
+					return;
+				}
+
+				if ("redirectUrl" in payResult) {
+					storeYooKassaTransaction(liveCheckout.id, payResult.transactionId);
+
+					// Keep the completion lock while the browser leaves Paper.
+					orderPlaced = true;
+					window.location.assign(payResult.redirectUrl);
 					return;
 				}
 

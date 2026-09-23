@@ -8,12 +8,13 @@ import {
 	isStripeGateway,
 	isStripePaymentEnabled,
 } from "@/checkout/lib/payment/providers/stripe";
+import { findYooKassaGateway, isYooKassaGateway } from "@/checkout/lib/payment/providers/yookassa";
 import { type PaymentGatewayLike, type PaymentSubmitMode } from "./types";
 
 /** Built-in gateways this UI does not integrate with but should not block checkout. */
 export const IGNORABLE_GATEWAY_IDS = ["saleor.io.gift-card-payment-gateway"] as const;
 
-export type IntegratedGatewayType = "stripe" | "dummy";
+export type IntegratedGatewayType = "yookassa" | "stripe" | "dummy";
 
 type IntegratedGatewayDefinition = {
 	type: IntegratedGatewayType;
@@ -28,6 +29,13 @@ type IntegratedGatewayDefinition = {
  * Add a new Saleor payment app here plus its provider module and UI component.
  */
 export const INTEGRATED_GATEWAYS: readonly IntegratedGatewayDefinition[] = [
+	{
+		type: "yookassa",
+		submitMode: "server",
+		findGateway: (gateways) => findYooKassaGateway(gateways),
+		isEnabled: () => true,
+		matchesGateway: isYooKassaGateway,
+	},
 	{
 		type: "stripe",
 		submitMode: "client",

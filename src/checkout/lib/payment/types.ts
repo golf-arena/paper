@@ -7,6 +7,7 @@ export type PaymentSubmitMode = "client" | "server";
 /** Result of a payment attempt after billing has been updated. */
 export type PaymentResult =
 	| { ok: true; orderId: string; orderViewToken: string }
+	| { ok: true; redirectUrl: string; transactionId: string }
 	| {
 			ok: false;
 			error: string;
@@ -23,6 +24,7 @@ export type PaymentContext = {
 
 type IntegratedPaymentProvider =
 	| { type: "stripe"; gateway: PaymentGatewayLike; submitMode: PaymentSubmitMode }
+	| { type: "yookassa"; gateway: PaymentGatewayLike; submitMode: PaymentSubmitMode }
 	| { type: "dummy"; gateway: PaymentGatewayLike; submitMode: PaymentSubmitMode };
 
 /** Which payment integration handles the current checkout. */
@@ -45,5 +47,5 @@ export type TransactionInitializePayload =
 export function isIntegratedPaymentProvider(
 	provider: ResolvedPaymentProvider,
 ): provider is IntegratedPaymentProvider {
-	return provider.type === "stripe" || provider.type === "dummy";
+	return provider.type === "stripe" || provider.type === "yookassa" || provider.type === "dummy";
 }
