@@ -1,6 +1,8 @@
 services:
   saleor-paper:
     container_name: saleor-paper
+    env_file:
+      - .env
     build:
       context: .
       dockerfile: Dockerfile

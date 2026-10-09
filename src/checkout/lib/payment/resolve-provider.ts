@@ -50,5 +50,8 @@ export function usesClientPaymentSubmit(provider: ResolvedPaymentProvider): bool
 
 /** Whether the checkout Pay button can run for the resolved provider. */
 export function canSubmitPayment(provider: ResolvedPaymentProvider): boolean {
-	return provider.type === "dummy" && provider.submitMode === "server";
+	return (
+		(provider.type === "dummy" || provider.type === "yookassa") &&
+		provider.submitMode === "server"
+	);
 }
